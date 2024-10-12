@@ -1,5 +1,5 @@
 package src;
-
+//programa principal
 import javax.swing.*;
 import java.io.*;
 import java.util.Scanner;
@@ -11,6 +11,7 @@ public class Manutencao {
     private static Estudante[] estud;       // vetor de estudantes
     private static int quantosEstudantes;   // tamanho lógico do vetor estud
     private static BufferedReader arquivoDeEntrada;
+    private static ManterEstudantes[] materias;
     private static BufferedWriter arquivoDeSaida;
     static Scanner leitor = new Scanner(in);
     static boolean continuarPrograma = true;
@@ -132,9 +133,9 @@ public class Manutencao {
             else
                 if (raDoProcurado.compareTo(raDoMeioDoTrechoDoVetor) < 0)
                     fim = onde - 1;
-            else
-                inicio = onde + 1;
-        }
+                else
+                    inicio = onde + 1;
+            }
         if (!achou)
             onde = inicio;   // posição de inclusao do RA em ordem crescente
         return achou;
@@ -233,17 +234,6 @@ public class Manutencao {
         leitor.nextLine();
     }
 
-    // codificar um método digitarNotas:
-    // pedir um RA
-    // procurar o RA no vetor estud
-    // se não existir, avisa o usuário
-    // se existir:
-    //      pergunta quantas notas serão digitadas
-    //      percorre o vetor de notas do estudante encontrado e
-    //      pergunta ao usuário qual a nota dessa posição
-    //      valide a nota entre 0 e 10.0, peça de novo se a nota não
-    //      estiver nesse intervalo
-
     private static void trocar(int indMaior, int indMenor) {
         Estudante auxiliar = estud[indMaior];
         estud[indMaior] = estud[indMenor];
@@ -314,4 +304,33 @@ public class Manutencao {
             out.println(erro.getMessage());
         }
     }
+
+    public static void disciplinaMaiorAprovacao(){
+
+    }
+
+    public static void disciplinaMaiorRetencao(){
+
+    }
+
+    public static void estudanteMaiorMediaNotas(){
+
+    }
+
+    public static void maiorEMenorNotaEstudanteDestaque(){
+
+    }
+
+    public static void mediaAritmeticaAluno(){
+
+    }
+
+    public static void maiorNotaMenorMedia(){
+
+    }
+
+    public static void menorNotaMaiorMedia(){
+
+    }
+
 }

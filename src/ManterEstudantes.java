@@ -7,6 +7,7 @@ public class ManterEstudantes implements ManterDados {
     int qtosDados,
             posicaoAtual;
     Estudante[] dados;
+    int tamanhoLogico;
     Situacao situacao;
     public void leituraDosDados(String nomeArquivo) {
         try {
@@ -50,20 +51,25 @@ public class ManterEstudantes implements ManterDados {
     public void gravarDados(String nomeArquivo) throws IOException {
         BufferedWriter arquivoDeSaida = new BufferedWriter(
                 new FileWriter("c:\\temp\\dadosEstudantes.txt"));
-        for (int indice=0; indice < qtosDados; indice++)
+        for (int indice=0; indice < qtosDados; indice++){
             arquivoDeSaida.write(dados[indice].formatoDeArquivo());
+            tamanhoLogico++;
+        }
         arquivoDeSaida.close();
     }
 
     public Boolean existe(Estudante dadoProcurado) {
         return false;
     }
+
     public void incluirNoFinal(Estudante novoDado) {
 
     }
     public void incluirEm(Estudante novoDado, int posicaoDeInclusao) {
-
+        dados[posicaoDeInclusao] = novoDado;
+        out.println("Incluído com sucesso");
     }
+
     public void excluir(int posicaoDeExclusao) {
 
     }
