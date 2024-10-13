@@ -11,8 +11,7 @@ public class ManterEstudantes implements ManterDados {
     public void leituraDosDados(String nomeArquivo) {
         try {
             posicaoAtual = 0;
-            BufferedReader arquivoDeEntrada = new BufferedReader(
-                    new FileReader(nomeArquivo));
+            BufferedReader arquivoDeEntrada = new BufferedReader(new FileReader(nomeArquivo));
             String linhaDoArquivo = "";
             try {
                 boolean parar = false;
@@ -20,20 +19,18 @@ public class ManterEstudantes implements ManterDados {
                     Estudante novoDado = new Estudante();
 
                     try {
-
                         if (novoDado.leuLinhaDoArquivo(arquivoDeEntrada) ) {
                             incluirNoFinal(novoDado);
                         }
-                        else
+                        else {
                             parar = true;
+                        }
                     }
 
                     catch (Exception erroDeLeitura) {
-
                         out.println(erroDeLeitura.getMessage());
 
                         parar = true;
-
                     }
                 }
                 arquivoDeEntrada.close();
@@ -48,8 +45,7 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void gravarDados(String nomeArquivo) throws IOException {
-        BufferedWriter arquivoDeSaida = new BufferedWriter(
-                new FileWriter(nomeArquivo));
+        BufferedWriter arquivoDeSaida = new BufferedWriter(new FileWriter(nomeArquivo));
         for (int indice=0; indice < qtosDados; indice++){
             arquivoDeSaida.write(dados[indice].formatoDeArquivo());
             tamanhoLogico++;
@@ -163,40 +159,51 @@ public class ManterEstudantes implements ManterDados {
     public void ordenar() { //mds chico explica ordenar pelo que?
 
     }
+
     public Boolean estaVazio() {
         if (tamanhoLogico == 0){
             return true;
         }
         return false;
     }
+
     public Boolean estaNoInicio() {
         return false;
         //pesquisa binaria? telepatia? nao sei
     }
+
     public Boolean estaNoFim() {
         return false;
     }
+
     public void irAoInicio() {
 
     }
+
     public void irAoFim() {
 
     }
+
     public void irAoAnterior() {
 
     }
+
     public void irAoProximo() {
 
     }
+
     public int getPosicaoAtual() {
         return 1;
     }
+
     public void setPosicaoAtual(int novaPosicao) {
 
     }
+
     public Situacao getSituacao() {
         return situacao;
     }
+
     public void setSituacao(Situacao novaSituacao) {
         situacao = novaSituacao;
     }

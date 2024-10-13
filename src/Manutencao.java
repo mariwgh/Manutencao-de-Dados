@@ -134,6 +134,7 @@ public class Manutencao {
     // compareTo()   > 0  dado this > outro dado
     // esse método guarda no atributo "onde" o índice de inclusão ou
     // o índice em que o estudante procurado foi encontrado
+
     public static boolean existeEstudante(Estudante estProcurado) {
         int inicio = 0;
         int fim = quantosEstudantes - 1;
@@ -181,6 +182,7 @@ public class Manutencao {
             novoVetor[indice] = estud[indice];
         estud = novoVetor;
     }
+
     private static void incluirEmOrdem(Estudante novo) {
         if (quantosEstudantes >= estud.length)
             expandirVetor();
@@ -253,6 +255,7 @@ public class Manutencao {
         estud[indMaior] = estud[indMenor];
         estud[indMenor] = auxiliar;
     }
+
     private static void ordenarPorCurso() {
         for (int lento=0; lento < quantosEstudantes; lento++)
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
@@ -286,6 +289,7 @@ public class Manutencao {
             ordemAtual = Ordens.porMedia;
         }
     }
+
     private static void digitarNotas() {
         out.println("Digitação de notas de estudante:\n");
         out.print("Digite o RA do(a) estudante desejado(a): ");
