@@ -1,4 +1,3 @@
-package src;
 //programa principal
 import javax.swing.*;
 import java.io.*;
@@ -91,13 +90,20 @@ public class Manutencao {
             out.println("Opções:\n");
             out.println("0 - Terminar programa");
             out.println("1 - Incluir estudante");
-            out.println("2 - Listar estudantes");
+            out.println("2 - Listar estudantes");   // Tem que mostrar as siglas das materias
             out.println("3 - Excluir estudante");
-            out.println("4 - Listar situações");
+            out.println("4 - Listar situações");    // Tem que mostrar as siglas das materias
             out.println("5 - Digitar notas de estudante");
             out.println("6 - Ordenar por curso");
             out.println("7 - Ordenar por nome");
             out.println("8 - Ordenar por média");
+            out.println("9 - Disciplina com maior número de estudantes aprovados");
+            out.println("10 - Disciplina com maior número de estudantes retidos");
+            out.println("11 - Estudante com maior média");
+            out.println("12 - Disciplinas maior e menor nota (estudante com maior média)");
+            out.println("13 - Média aritimética por disciplina");
+            out.println("14 - Maior nota na disciplina com menor média");
+            out.println("15 - Menor nota na disciplina com maior média");
             out.print("\nSua opção: ");
             opcao = leitor.nextInt();
             leitor.nextLine();      // necessário após nextInt() para poder ler strings a seguir
@@ -110,6 +116,14 @@ public class Manutencao {
                 case 6 : ordenarPorCurso(); break;
                 case 7 : ordenarPorNome(); break;
                 case 8 : ordenarPorMedia(); break;
+                case 9: disciplinaMaiorAprovacao(); break;
+                case 10: disciplinaMaiorRetencao(); break;
+                case 11: estudanteMaiorMediaNotas(); break;
+                case 12: maiorEMenorNotaEstudanteDestaque(); break;
+                case 13: mediaAritmeticaAluno(); break;
+                case 14: maiorNotaMenorMedia(); break;
+                case 15: menorNotaMaiorMedia(); break;
+                default: out.println("Opção inválida!");
             }
         }
         while (opcao != 0);
