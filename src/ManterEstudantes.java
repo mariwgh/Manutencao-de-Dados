@@ -91,7 +91,7 @@ public class ManterEstudantes extends Estudante implements ManterDados {
         e se nao tiver, incluir, se tiver, expandir e incluir apos o ultimo
         indice usado.
         */
-        if(tamanhoLogico == dados.length){
+        if (tamanhoLogico == dados.length){
             //expandir vetor para o dobro
             int tamanhoNovo = dados.length *2;
             //tamanhoLogico = 0;  limpar para contar de novo
@@ -123,9 +123,25 @@ public class ManterEstudantes extends Estudante implements ManterDados {
     }
 
     public void incluirEm(Estudante novoDado, int posicaoDeInclusao) {
+        // querida rafa, modifiquei aq pois para incluir um novo dado
+        //alem de aumentar o tamanho do vetor, presica mover as posicoes, pois nao
+        //queremos substituir, ne?
+        //eu acho que e isso, se estiver errada me corrija
+        //nao testei mas sla
+
         try{
+            Estudante[] tempDados = new Estudante[dados.length + 1];
+            for (int i = 0; i < dados.length; i++) {
+                tempDados[i] = dados[i];
+            }
+            dados = tempDados;
+
+            for (int i = tamanhoLogico; i > posicaoDeInclusao; i--) {
+                dados[i] = dados[i - 1];
+            }
+
+            tamanhoLogico++;
             dados[posicaoDeInclusao] = novoDado;
-            out.println("Incluído com sucesso!");
         }
         catch (Exception erro){
             out.println("Ocorreu um erro: " + erro);
@@ -135,8 +151,8 @@ public class ManterEstudantes extends Estudante implements ManterDados {
 
     public void excluir(int posicaoDeExclusao) {
         tamanhoLogico -= 1;
-        for (int indice=posicaoDeExclusao; indice < tamanhoLogico; indice++)
-            dados[indice] = dados[indice+1];
+        for (int indice = posicaoDeExclusao; indice < tamanhoLogico; indice++)
+            dados[indice] = dados[indice + 1];
     }
 
     public Estudante valorDe(int indiceDeAcesso) {
@@ -161,16 +177,22 @@ public class ManterEstudantes extends Estudante implements ManterDados {
     }
 
     public void ordenar() { //mds chico explica ordenar pelo que?
-
+        //por nome (????
+        for (int i = 0; i < tamanhoLogico - 1; i++) {
+            for (int ii = i + 1; ii < tamanhoLogico; ii++) {
+                if (dados[i].getNome().compareTo(dados[ii].getNome()) > 0) {
+                    trocar(i, ii); // Chama o método de troca
+                }
+            }
+        }
     }
 
     public Boolean estaVazio() {
-        if (tamanhoLogico == 0){
+        if (tamanhoLogico == 0) {
             return true;
         }
         return false;
     }
-
 
     public Boolean estaNoInicio() {
         return false;
@@ -182,27 +204,27 @@ public class ManterEstudantes extends Estudante implements ManterDados {
     }
 
     public void irAoInicio() {
-
+        posicaoAtual = 0;
     }
 
     public void irAoFim() {
-
+        posicaoAtual = tamanhoLogico - 1;
     }
 
     public void irAoAnterior() {
-
+        posicaoAtual--;
     }
 
     public void irAoProximo() {
-
+        posicaoAtual++;
     }
 
     public int getPosicaoAtual() {
-        return 1;
+        return posicaoAtual;
     }
 
     public void setPosicaoAtual(int novaPosicao) {
-
+        posicaoAtual = novaPosicao;
     }
 
     public Situacao getSituacao() {

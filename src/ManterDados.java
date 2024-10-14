@@ -1,4 +1,4 @@
-//interface
+//interface; conjunto de métodos que qualquer classe que implemente esta interface deverá fornecer
 import java.io.IOException;
 
 public interface ManterDados {
