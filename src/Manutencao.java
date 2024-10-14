@@ -1,14 +1,17 @@
-//programa principal
 import javax.swing.*;
 import java.io.*;
 import java.util.Scanner;
 import static java.lang.System.*;
 
+//ele quer que no Manutencao só use o ManterEstudantes e nao use o vetor estud
+
 public class Manutencao {
     enum Ordens {porRa, porNome, porCurso, porMedia};
     private static Ordens ordemAtual = Ordens.porRa;
+    private static ManterEstudantes[] mantEstud;
     private static Estudante[] estud;       // vetor de estudantes
     private static int quantosEstudantes;   // tamanho lógico do vetor estud
+    private static double estudanteDestaque;
     private static BufferedReader arquivoDeEntrada;
     private static ManterEstudantes[] materias;
     private static BufferedWriter arquivoDeSaida;
@@ -17,9 +20,9 @@ public class Manutencao {
     static int onde; // índice resultante da pesquisa binária
 
     public static void main(String[] args) throws Exception {
-        estud = new Estudante[3];  // 50 - tamanho físico
+        mantEstud = new ManterEstudantes[3];  // 50 - tamanho físico (mas pq 3???)
         for (int ind=0; ind < 3; ind++)
-            estud[ind] = new Estudante(); // criar objetos Estudante vazios no vetor
+            mantEstud[ind] = new ManterEstudantes(); // criar objetos Estudante vazios no vetor
         quantosEstudantes = 0; // tamanho lógico (vetor vazio)
         preencherVetorPorArquivo();
         if (continuarPrograma) {
@@ -30,9 +33,10 @@ public class Manutencao {
     }
 
     public static void preencherVetorPorArquivo() {
+        String caminho = "c:\\temp\\dadosEstudantes.txt";
         try {
             arquivoDeEntrada = new BufferedReader(
-                    new FileReader("c:\\temp\\dadosEstudantes.txt")
+                    new FileReader(caminho)
             );
             String linhaDoArquivo = "";
             try
@@ -44,7 +48,11 @@ public class Manutencao {
                     try
                     {
                         if (novoEstudante.leuLinhaDoArquivo(arquivoDeEntrada) ) {
-                            estud[quantosEstudantes] = novoEstudante;
+                            mantEstud[quantosEstudantes] = (ManterEstudantes) novoEstudante;
+                            //SÓ COLOQUEI O EXTENDS NO MANTERESTUDANTS E PAROU DE DAR ERRO
+                            //precisaria transformar o novo estudante para o manter estudante,
+                            //ou eu crio um leuLinhaDoArquivo no MANTEREstudantes
+                            //mas eu não sei se pode
                             quantosEstudantes++;
                         }
                         else
@@ -80,7 +88,7 @@ public class Manutencao {
         // percorro o vetor de estudantes para gravar, no arquivo de saída,
         // os objetos da classe Estudante armazenados no vetor estud
         for (int indice=0; indice < quantosEstudantes; indice++)
-            arquivoDeSaida.write(estud[indice].formatoDeArquivo());
+            arquivoDeSaida.write(mantEstud[indice].formatoDeArquivo());     //teria que implementar essa funlção no ManterEstudantes
         arquivoDeSaida.close();
     }
 
@@ -141,16 +149,16 @@ public class Manutencao {
         boolean achou = false;
         while (! achou && inicio <= fim) {
             onde = (inicio + fim) / 2;
-            String raDoMeioDoTrechoDoVetor = estud[onde].getRa();
+            String raDoMeioDoTrechoDoVetor = mantEstud[onde].getRa();
             String raDoProcurado = estProcurado.getRa();
             if (raDoMeioDoTrechoDoVetor.compareTo(raDoProcurado) == 0)
                 achou = true;
             else
-                if (raDoProcurado.compareTo(raDoMeioDoTrechoDoVetor) < 0)
-                    fim = onde - 1;
-                else
-                    inicio = onde + 1;
-            }
+            if (raDoProcurado.compareTo(raDoMeioDoTrechoDoVetor) < 0)
+                fim = onde - 1;
+            else
+                inicio = onde + 1;
+        }
         if (!achou)
             onde = inicio;   // posição de inclusao do RA em ordem crescente
         return achou;
@@ -168,8 +176,11 @@ public class Manutencao {
         out.print("Nome  : ");
         String nome = leitor.nextLine();
         Estudante umEstudante = new Estudante(curso, ra, nome);
+        //teria que reverter o umEstudante para ManterEstudantes
+        //mas teria que ter um construtor no ManterEstudantes e armazenar
+        //os mesmos dados
         if (existeEstudante(umEstudante))  // ajusta a variável onde
-          JOptionPane.showMessageDialog(null,"Estudante repetido!");
+            JOptionPane.showMessageDialog(null,"Estudante repetido!");
         else
         {
             incluirEmOrdem(umEstudante);  // última posição usada
@@ -177,19 +188,19 @@ public class Manutencao {
     }
 
     private static void expandirVetor() {
-        Estudante[] novoVetor = new Estudante[estud.length * 2];
+        ManterEstudantes[] novoVetor = new ManterEstudantes[mantEstud.length * 2];
         for (int indice=0; indice<quantosEstudantes; indice++)
-            novoVetor[indice] = estud[indice];
+            novoVetor[indice] = mantEstud[indice];
         estud = novoVetor;
     }
 
-    private static void incluirEmOrdem(Estudante novo) {
+    private static void incluirEmOrdem(ManterEstudantes novo) { //oq q ta acontecendo aqui??
         if (quantosEstudantes >= estud.length)
             expandirVetor();
         // desloco para a direita os estudantes com RA > RA do novo
         for (int indice = quantosEstudantes; indice > onde; indice--)
-            estud[indice] = estud[indice-1];
-        estud[onde] = novo;
+            mantEstud[indice] = mantEstud[indice-1];
+        mantEstud[onde] = novo;
         quantosEstudantes++;  // temos mais um estudante no vetor
     }
 
@@ -211,7 +222,7 @@ public class Manutencao {
     private static void excluir(int indiceDeExclusao) {
         quantosEstudantes--;
         for (int indice=indiceDeExclusao; indice < quantosEstudantes; indice++)
-            estud[indice] = estud[indice+1];
+            mantEstud[indice] = mantEstud[indice+1];
     }
 
     public static void listarEstudantes() {
@@ -219,7 +230,7 @@ public class Manutencao {
         int contLinha = 0;  // contador de linhas
         for (int ind = 0; ind < quantosEstudantes; ind++)
         {
-            out.println(estud[ind]);
+            out.println(mantEstud[ind]);
 
             if (++contLinha >= 20) {       // se exibiu 20 linhas, espera Enter
                 out.print("\n\nTecle [Enter] para prosseguir: ");
@@ -234,14 +245,29 @@ public class Manutencao {
     public static void listarSituacoes() {
         out.println("\n\nSituação estudantil\n");
         String situacao = "";
+        estudanteDestaque = Double.MIN_NORMAL;
         for (int indice = 0; indice < quantosEstudantes; indice++)
+            //creio que vai ter que colocar um ngc de indice para verificar
+            //em qual materia está e verificar dps com if e else as materias
+            //com mais retenção e aprovação
+            /*
+            pelo que eu pensei:
+                dá para um substring para ver as notas, pois elas vão estar todas em
+                um mesmo indice do vetor e depois ver de quem é quem, tipo:
+                double biologia = mantEstud[i].substring(3,6)
+                e aí faz toda a análise para ver se ele foi aprvado ou não e se sim vai somando
+                nas aprovações de biologia
+             */
         {
             double mediaDesseEstudante = estud[indice].mediaDasNotas();
             if (mediaDesseEstudante < 5)
                 situacao = "Não promovido(a)";
-            else
+            else{
                 situacao = "Promovido(a)    ";
-
+                if(mediaDesseEstudante > estudanteDestaque){
+                    estudanteDestaque = mediaDesseEstudante;
+                }
+            }
             out.printf(
                     "%4.1f %16s "+estud[indice]+"\n", mediaDesseEstudante,
                     situacao);
@@ -251,15 +277,15 @@ public class Manutencao {
     }
 
     private static void trocar(int indMaior, int indMenor) {
-        Estudante auxiliar = estud[indMaior];
-        estud[indMaior] = estud[indMenor];
-        estud[indMenor] = auxiliar;
+        ManterEstudantes auxiliar = mantEstud[indMaior];
+        mantEstud[indMaior] = mantEstud[indMenor];
+        mantEstud[indMenor] = auxiliar;
     }
 
     private static void ordenarPorCurso() {
         for (int lento=0; lento < quantosEstudantes; lento++)
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (estud[lento].getCurso().compareTo(estud[rapido].getCurso()) > 0)
+                if (mantEstud[lento].getCurso().compareTo(mantEstud[rapido].getCurso()) > 0)
                     trocar(lento, rapido);
         ordemAtual = Ordens.porCurso;
     }
@@ -267,7 +293,7 @@ public class Manutencao {
     private static void ordenarPorRa() {
         for (int lento=0; lento < quantosEstudantes; lento++)
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (estud[lento].getRa().compareTo(estud[rapido].getRa()) > 0)
+                if (mantEstud[lento].getRa().compareTo(mantEstud[rapido].getRa()) > 0)
                     trocar(lento, rapido);
         ordemAtual = Ordens.porRa;
     }
@@ -275,16 +301,16 @@ public class Manutencao {
     private static void ordenarPorNome() {
         for (int lento=0; lento < quantosEstudantes; lento++)
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (estud[lento].getNome().compareTo(estud[rapido].getNome()) > 0)
+                if (mantEstud[lento].getNome().compareTo(mantEstud[rapido].getNome()) > 0)
                     trocar(lento, rapido);
         ordemAtual = Ordens.porNome;
     }
 
     private static void ordenarPorMedia() {
         for (int lento=0; lento < quantosEstudantes; lento++) {
-            double mediaAtual = estud[lento].mediaDasNotas();
+            double mediaAtual = mantEstud[lento].mediaDasNotas();
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (mediaAtual > estud[rapido].mediaDasNotas())
+                if (mediaAtual > mantEstud[rapido].mediaDasNotas())
                     trocar(lento, rapido);
             ordemAtual = Ordens.porMedia;
         }
@@ -303,7 +329,7 @@ public class Manutencao {
                 int quant = leitor.nextInt(); // depois de ler int, ler nextline()
                 leitor.nextLine(); // necessário após nextInt() para poder ler strings a seguir
 
-                estud[onde].setQuantasNotas(quant);
+                mantEstud[onde].setQuantasNotas(quant);
                 double nota;
                 for (int indNota = 0; indNota < quant; indNota++) {
                     do {
@@ -313,7 +339,7 @@ public class Manutencao {
                             break;  // sai do do-while
                         out.println("Nota inválida. Digite novamente:");
                     } while (true);
-                    estud[onde].setNota(nota, indNota);
+                    mantEstud[onde].setNota(nota, indNota);
                 }
             }
         }
@@ -332,11 +358,13 @@ public class Manutencao {
     }
 
     public static void estudanteMaiorMediaNotas(){
-
+        out.println("O estudante com maior média de notas é: " + estudanteDestaque);
     }
 
     public static void maiorEMenorNotaEstudanteDestaque(){
-
+        //pegar o indice do estudante destaque e fzr um substring com
+        //maior = double.maxvalue e min = double.minvalue
+        //e depois fazer if
     }
 
     public static void mediaAritmeticaAluno(){

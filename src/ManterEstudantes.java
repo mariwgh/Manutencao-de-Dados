@@ -1,12 +1,16 @@
 import java.io.*;
 import static java.lang.System.out;
 
-public class ManterEstudantes implements ManterDados {
+public class ManterEstudantes extends Estudante implements ManterDados {
     int qtosDados, posicaoAtual;
     Estudante[] dados;
     int tamanhoLogico;
     String[] materias;
     Situacao situacao;
+
+    /*public ManterEstudantes(){        --> tenho quase certeza que vai precisa de um desse
+        super(getCurso , getRa , getNome);
+    }*/
 
     public void leituraDosDados(String nomeArquivo) {
         try {
@@ -167,6 +171,7 @@ public class ManterEstudantes implements ManterDados {
         return false;
     }
 
+
     public Boolean estaNoInicio() {
         return false;
         //pesquisa binaria? telepatia? nao sei
@@ -207,4 +212,8 @@ public class ManterEstudantes implements ManterDados {
     public void setSituacao(Situacao novaSituacao) {
         situacao = novaSituacao;
     }
+
+    /*public String getCurso(){
+        return curso;
+    }*/
 }
