@@ -466,11 +466,11 @@ public class Manutencao {
             double nota = estudanteDestaque.getNota()[i];
             if (nota > maiorNota) {
                 maiorNota = nota;
-                materiaMaiorNota = i.getNome();
+                materiaMaiorNota = mantEstud[i].getNome();
             }
             if (nota < menorNota) {
                 menorNota = nota;
-                materiaMenorNota = i.getNome();
+                materiaMenorNota = mantEstud[i].getNome();
             }
         }
 
