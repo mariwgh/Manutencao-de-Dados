@@ -32,7 +32,6 @@ public class ManterEstudantes implements ManterDados {
         try {
             posicaoAtual = 0;
             BufferedReader arquivoDeEntrada = new BufferedReader(new FileReader(nomeArquivo));
-            String linhaDoArquivo = "";
             try {
                 boolean parar = false;
                 while (! parar) {
@@ -97,45 +96,6 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void incluirNoFinal(Estudante novoDado) {
-        /*
-        marietti, querida, eu não entendi direito o que esse metodo faria,
-        então, fiz o que achei que era.
-        Porém também pensei que ele quisesse que expandisse o vetor e
-        incluísse nos espaços no final mas eu acho que não então
-        fiz usando tamanho logico+1.
-        Perguntei p clara e ela ddisse que tinha que verificar se tava cheio
-        e se nao tiver, incluir, se tiver, expandir e incluir apos o ultimo
-        indice usado.
-        */
-/*        if (tamanhoLogico == dados.length){
-            //expandir vetor para o dobro
-            int tamanhoNovo = dados.length * 2;
-            //tamanhoLogico = 0;  limpar para contar de novo
-            Estudante[] tempDados = new Estudante[tamanhoNovo];
-
-            for (int i = 0 ; i <= tamanhoLogico - 1; i++){
-                tempDados[i] = dados[i];
-            }
-            dados = tempDados;
-
-            try{
-                dados[tamanhoLogico + 1] = novoDado;
-                out.println("Dado incluído com sucesso!");
-            }
-            catch (Exception erro){
-                out.println(erro.getMessage());
-            }
-        }
-        else{
-            try{
-                dados[tamanhoLogico+1] = novoDado;
-                out.println("Dado incluído com sucesso!");
-            }
-            catch (Exception erro){
-                out.println("Falha ao inserir: " + erro);
-            }
-        }*/
-
         if (qtosDados >= dados.length) {
             //expandir vetor
             Estudante[] novoVetor = new Estudante[dados.length * 2];
@@ -152,12 +112,6 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void incluirEm(Estudante novoDado, int posicaoDeInclusao) {
-        // querida rafa, modifiquei aq pois para incluir um novo dado
-        //alem de aumentar o tamanho do vetor, presica mover as posicoes, pois nao
-        //queremos substituir, ne?
-        //eu acho que e isso, se estiver errada me corrija
-        //nao testei mas sla
-
         try{
             Estudante[] tempDados = new Estudante[dados.length + 1];
             for (int i = 0; i < dados.length; i++) {
@@ -208,8 +162,7 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void ordenar() {
-        //mds chico explica ordenar pelo que?
-        //por nome (???? POR RA
+    //ordenar por ra
         for (int i = 0; i < qtosDados - 1; i++) {
             for (int ii = i + 1; ii < qtosDados; ii++) {
                 if (dados[i].getRa().compareTo(dados[ii].getRa()) > 0) {
@@ -228,7 +181,6 @@ public class ManterEstudantes implements ManterDados {
 
     public Boolean estaNoInicio() {
         return false;
-        //pesquisa binaria? telepatia? nao sei
     }
 
     public Boolean estaNoFim() {
