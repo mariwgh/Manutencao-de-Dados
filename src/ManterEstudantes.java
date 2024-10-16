@@ -1,16 +1,32 @@
 import java.io.*;
 import static java.lang.System.out;
 
-public class ManterEstudantes extends Estudante implements ManterDados {
-    int qtosDados, posicaoAtual;
+public class ManterEstudantes implements ManterDados {
+    int qtosDados, posicaoAtual, tamanhoFis;
     Estudante[] dados;
-    int tamanhoLogico;
+    //int tamanhoLogico;
     String[] materias;
     Situacao situacao;
 
-    /*public ManterEstudantes(){        --> tenho quase certeza que vai precisa de um desse
-        super(getCurso , getRa , getNome);
+
+    /*public ManterEstudantes(Estudante estudante) throws Exception {
+        super(estudante.getCurso(), estudante.getRa(), estudante.getNome());
     }*/
+
+    private void expandirVetor() {
+        Estudante[] novoVetor = new Estudante[dados.length * 2];
+
+        for (int indice = 0; indice < qtosDados; indice++) {
+            novoVetor[indice] = dados[indice];
+        }
+
+        dados = novoVetor;
+    }
+
+    public void ManterEstudantes(int tamanhoFisico) {
+        tamanhoFis = tamanhoFisico;
+        dados = new Estudante[tamanhoFisico];
+    }
 
     public void leituraDosDados(String nomeArquivo) {
         try {
@@ -52,14 +68,14 @@ public class ManterEstudantes extends Estudante implements ManterDados {
         BufferedWriter arquivoDeSaida = new BufferedWriter(new FileWriter(nomeArquivo));
         for (int indice=0; indice < qtosDados; indice++){
             arquivoDeSaida.write(dados[indice].formatoDeArquivo());
-            tamanhoLogico++;
+            qtosDados++;
         }
         arquivoDeSaida.close();
     }
 
     public Boolean existe(Estudante dadoProcurado) {
-        for (int i = 0 ; i <= tamanhoLogico-1 ; i++){
-            if (dados[i] == dadoProcurado){
+        for (int i = 0 ; i <= qtosDados-1 ; i++){
+            if (dados[i].getRa().compareTo(dadoProcurado.getRa()) == 0){
                 return true;
             }
         }
@@ -91,24 +107,24 @@ public class ManterEstudantes extends Estudante implements ManterDados {
         e se nao tiver, incluir, se tiver, expandir e incluir apos o ultimo
         indice usado.
         */
-        if (tamanhoLogico == dados.length){
+/*        if (tamanhoLogico == dados.length){
             //expandir vetor para o dobro
-            int tamanhoNovo = dados.length *2;
+            int tamanhoNovo = dados.length * 2;
             //tamanhoLogico = 0;  limpar para contar de novo
             Estudante[] tempDados = new Estudante[tamanhoNovo];
-            for (int i = 0 ; i <= tamanhoLogico-1; i++){
+
+            for (int i = 0 ; i <= tamanhoLogico - 1; i++){
                 tempDados[i] = dados[i];
             }
             dados = tempDados;
 
             try{
-                dados[tamanhoLogico+1] = novoDado;
+                dados[tamanhoLogico + 1] = novoDado;
                 out.println("Dado incluído com sucesso!");
             }
             catch (Exception erro){
                 out.println(erro.getMessage());
             }
-
         }
         else{
             try{
@@ -118,8 +134,21 @@ public class ManterEstudantes extends Estudante implements ManterDados {
             catch (Exception erro){
                 out.println("Falha ao inserir: " + erro);
             }
+        }*/
+
+        if (qtosDados >= dados.length) {
+            //expandir vetor
+            Estudante[] novoVetor = new Estudante[dados.length * 2];
+
+            for (int indice = 0; indice < qtosDados; indice++) {
+                novoVetor[indice] = dados[indice];
+            }
+
+            dados = novoVetor;
         }
 
+        dados[qtosDados] = novoDado;
+        qtosDados++;
     }
 
     public void incluirEm(Estudante novoDado, int posicaoDeInclusao) {
@@ -136,11 +165,11 @@ public class ManterEstudantes extends Estudante implements ManterDados {
             }
             dados = tempDados;
 
-            for (int i = tamanhoLogico; i > posicaoDeInclusao; i--) {
+            for (int i = qtosDados; i > posicaoDeInclusao; i--) {
                 dados[i] = dados[i - 1];
             }
 
-            tamanhoLogico++;
+            qtosDados++;
             dados[posicaoDeInclusao] = novoDado;
         }
         catch (Exception erro){
@@ -150,9 +179,11 @@ public class ManterEstudantes extends Estudante implements ManterDados {
     }
 
     public void excluir(int posicaoDeExclusao) {
-        tamanhoLogico -= 1;
-        for (int indice = posicaoDeExclusao; indice < tamanhoLogico; indice++)
+        for (int indice = posicaoDeExclusao; indice < qtosDados ; indice++) {
             dados[indice] = dados[indice + 1];
+        }
+
+        qtosDados -= 1;
     }
 
     public Estudante valorDe(int indiceDeAcesso) {
@@ -176,11 +207,12 @@ public class ManterEstudantes extends Estudante implements ManterDados {
         dados[destino] = auxiliar;
     }
 
-    public void ordenar() { //mds chico explica ordenar pelo que?
-        //por nome (????
-        for (int i = 0; i < tamanhoLogico - 1; i++) {
-            for (int ii = i + 1; ii < tamanhoLogico; ii++) {
-                if (dados[i].getNome().compareTo(dados[ii].getNome()) > 0) {
+    public void ordenar() {
+        //mds chico explica ordenar pelo que?
+        //por nome (???? POR RA
+        for (int i = 0; i < qtosDados - 1; i++) {
+            for (int ii = i + 1; ii < qtosDados; ii++) {
+                if (dados[i].getRa().compareTo(dados[ii].getRa()) > 0) {
                     trocar(i, ii); // Chama o método de troca
                 }
             }
@@ -188,7 +220,7 @@ public class ManterEstudantes extends Estudante implements ManterDados {
     }
 
     public Boolean estaVazio() {
-        if (tamanhoLogico == 0) {
+        if (qtosDados == 0) {
             return true;
         }
         return false;
@@ -208,7 +240,7 @@ public class ManterEstudantes extends Estudante implements ManterDados {
     }
 
     public void irAoFim() {
-        posicaoAtual = tamanhoLogico - 1;
+        posicaoAtual = qtosDados - 1;
     }
 
     public void irAoAnterior() {
@@ -235,7 +267,4 @@ public class ManterEstudantes extends Estudante implements ManterDados {
         situacao = novaSituacao;
     }
 
-    /*public String getCurso(){
-        return curso;
-    }*/
 }

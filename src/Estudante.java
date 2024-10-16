@@ -64,8 +64,7 @@ public class Estudante {
         // ELE PREENCHE O DADO COM ZEROS À ESQUERDA, ATÉ COMPLETAR O TAMANHO DEFINIDO APÓS
         // ESSE DÍGITO
         // referência: Livro  Java_Como_Programar_em_Java.pdf págnas 549 e 550 do arquivo pdf (não do livro)
-        String saida =
-                String.format("%2s%5s%30s%02d", curso, ra, nome, quantasNotas);
+        String saida = String.format("%2s%5s%30s%02d", curso, ra, nome, quantasNotas);
 
         // Locale.US usará a notação do Estados Unidos para o separador entre parte inteira e decimal,
         // ou seja, usará "."  mesmo que a configuração regionaldo computador seja de um país
@@ -163,8 +162,7 @@ public class Estudante {
     }
 
     public String toString() {
-        String saida =
-                String.format("%2s %5s %30s %2d", curso, ra, nome, quantasNotas);
+        String saida = String.format("%2s %5s %30s %2d", curso, ra, nome, quantasNotas);
 
         for (int indNota = 0; indNota < quantasNotas; indNota++)
             saida += String.format(" %4.1f", notas[indNota]);

@@ -4,100 +4,54 @@ import java.util.Scanner;
 import static java.lang.System.*;
 
 //ele quer que no Manutencao só use o ManterEstudantes e nao use o vetor estud
+//private static Estudante[] estud;             // vetor de estudantes
 
 public class Manutencao {
-    enum Ordens {porRa, porNome, porCurso, porMedia};
+    enum Ordens {porRa, porNome, porCurso, porMedia}
     private static Ordens ordemAtual = Ordens.porRa;
 
-    private static ManterEstudantes[] mantEstud;
-    private static Estudante[] estud;           // vetor de estudantes
-    private static int quantosEstudantes;       // tamanho lógico do vetor estud
-    private static double estudanteDestaque;
+    //private static ManterEstudantes[] mantEstud;
 
-    private static BufferedReader arquivoDeEntrada;
-    private static BufferedWriter arquivoDeSaida;
+    //private static int quantosEstudantes;           // tamanho lógico do vetor estud
+    private static int indiceEstudanteDestaque;  //da onde veio isso
 
-    private static ManterEstudantes[] materias;
+    //private static BufferedReader arquivoDeEntrada;
+    //private static BufferedWriter arquivoDeSaida;
+
+    private static String[] materias;
 
     static Scanner leitor = new Scanner(in);
     static boolean continuarPrograma = true;
-    static int onde;                            // índice resultante da pesquisa binária
+    //static int onde;                            // índice resultante da pesquisa binária
+
+    static ManterEstudantes objeto = new ManterEstudantes();
 
     public static void main(String[] args) throws Exception {
-        mantEstud = new ManterEstudantes[3];  // 50 - tamanho físico (mas pq 3???)
-        for (int ind=0; ind < 3; ind++) {
-            mantEstud[ind] = new ManterEstudantes(); // criar objetos Estudante vazios no vetor
-        }
-        quantosEstudantes = 0; // tamanho lógico (vetor vazio)
+        objeto.ManterEstudantes(50);
+        //mantEstud = new ManterEstudantes[3];                        // 50 - tamanho físico (mas pq 3???)
 
-        preencherVetorPorArquivo();
+        for (int ind = 0; ind < 50; ind++) {
+            //mantEstud[ind] = new ManterEstudantes(mantEstud[ind]); // criar objetos Estudante vazios no vetor
+            objeto.incluirNoFinal(new Estudante());
+        }
+
+        objeto.qtosDados = 0;                                  // tamanho lógico (vetor vazio)
+
+        objeto.leituraDosDados("DadosEstudantes.txt");
 
         if (continuarPrograma) {
             seletorDeOpcoes();
-            salvarVetorNoArquivo();
+            objeto.gravarDados("DadosEstudantes.txt");
         }
 
         out.println("\nPrograma encerrado.");
     }
 
-    public static void preencherVetorPorArquivo() {
-        String caminho = "c:\\temp\\DadosEstudantes.txt";
-
-        try {
-            arquivoDeEntrada = new BufferedReader(new FileReader(caminho));
-            String linhaDoArquivo = "";
-            try {
-                boolean parar = false;
-                while (!parar) {
-                    Estudante novoEstudante = new Estudante();
-                    try {
-                        if (novoEstudante.leuLinhaDoArquivo(arquivoDeEntrada) ) {
-                            mantEstud[quantosEstudantes] = (ManterEstudantes) novoEstudante;
-                            //mantEstud[quantosEstudantes] = new ManterEstudantes(novoEstudante);
-
-                            //SÓ COLOQUEI O EXTENDS NO MANTERESTUDANTS E PAROU DE DAR ERRO
-                            //precisaria transformar o novo estudante para o manter estudante,
-                            //ou eu crio um leuLinhaDoArquivo no MANTEREstudantes
-                            //mas eu não sei se pode
-                            quantosEstudantes++;
-                        }
-                        else
-                            parar = true;
-                    }
-                    catch (Exception erroDeLeitura) {
-                        out.println(erroDeLeitura.getMessage());
-                        parar = true;
-                    }
-                }
-                arquivoDeEntrada.close();
-            }
-            catch (IOException erroDeIO) {
-                out.println(erroDeIO.getMessage());
-                continuarPrograma = false;
-            }
-        }
-        catch (FileNotFoundException erro) {
-            out.println(erro.getMessage());
-            continuarPrograma = false;
-        }
-    }
-
-    public static void salvarVetorNoArquivo() throws IOException {
-        arquivoDeSaida = new BufferedWriter(new FileWriter("c:\\temp\\dadosEstudantes.txt"));
-
-        if (ordemAtual != Ordens.porRa)
-            ordenarPorRa();
-
-        // percorro o vetor de estudantes para gravar, no arquivo de saída,
-        // os objetos da classe Estudante armazenados no vetor estud
-        for (int indice=0; indice < quantosEstudantes; indice++)
-            arquivoDeSaida.write(mantEstud[indice].formatoDeArquivo());     //teria que implementar essa funlção no ManterEstudantes
-        arquivoDeSaida.close();
-    }
-
+    //tirei preencher vetor ( e o mesmo leiturados dados)
+    //tirei gsalvar vetor ( e o mesmo garvar dados)
 
     public static void seletorDeOpcoes() throws Exception {
-        int opcao = 0;
+        int opcao;
         do {
             out.println("Opções:\n");
             out.println("0 - Terminar programa");
@@ -129,7 +83,7 @@ public class Manutencao {
                 case 6 : ordenarPorCurso(); break;
                 case 7 : ordenarPorNome(); break;
                 case 8 : ordenarPorMedia(); break;
-                case 9: disciplinaMaiorAprovacao(); break;
+                case 9 : disciplinaMaiorAprovacao(); break;
                 case 10: disciplinaMaiorRetencao(); break;
                 case 11: estudanteMaiorMediaNotas(); break;
                 case 12: maiorEMenorNotaEstudanteDestaque(); break;
@@ -148,7 +102,7 @@ public class Manutencao {
     // esse método guarda no atributo "onde" o índice de inclusão ou
     // o índice em que o estudante procurado foi encontrado
 
-    public static boolean existeEstudante(Estudante estProcurado) {
+    /*public static boolean existeEstudante(Estudante estProcurado) {
         int inicio = 0;
         int fim = quantosEstudantes - 1;
         boolean achou = false;
@@ -169,24 +123,35 @@ public class Manutencao {
         if (!achou)
             onde = inicio;   // posição de inclusao do RA em ordem crescente
         return achou;
-    }
+    }*/
 
-    private static void expandirVetor() {
-        ManterEstudantes[] novoVetor = new ManterEstudantes[mantEstud.length * 2];
+    public static void lerMaterias() {
+        try {
+            BufferedReader arquivo = new BufferedReader(new FileReader("Materias.txt"));
 
-        for (int indice=0; indice<quantosEstudantes; indice++) {
-            novoVetor[indice] = mantEstud[indice];
+            int numMaterias = objeto.dados[0].getQuantasNotas();
+
+            materias = new String[numMaterias];
+
+            for (int i = 0; i < numMaterias; i++) {
+                materias[i] = arquivo.readLine();
+            }
         }
-
-        //troquei, nao se usa o estud??
-        mantEstud = novoVetor;
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
+    //faz sentido estar no outro
+
+
+    //tem no outro
     public static void incluirEstudante() throws Exception {
         if (ordemAtual != Ordens.porRa)
-            ordenarPorRa();
+            objeto.ordenar();
 
         out.println("Incluir Estudante\n");
+
         out.print("Curso : ");
         String curso = leitor.nextLine();
         out.print("RA    : ");
@@ -198,56 +163,48 @@ public class Manutencao {
         //teria que reverter o umEstudante para ManterEstudantes
         //mas teria que ter um construtor no ManterEstudantes e armazenar
         //os mesmos dados
-        if (existeEstudante(umEstudante))  // ajusta a variável onde
+        if (objeto.existe(umEstudante))  // ajusta a variável onde
             JOptionPane.showMessageDialog(null,"Estudante repetido!");
-        else
-        {
-            incluirEmOrdem(umEstudante);  // última posição usada
+        else {
+            objeto.incluirNoFinal(umEstudante);  // última posição usada
         }
-    }
-
-    //ue p q esse
-    private static void incluirEmOrdem(ManterEstudantes novo) { //oq q ta acontecendo aqui??
-        if (quantosEstudantes >= estud.length)
-            expandirVetor();
-        // desloco para a direita os estudantes com RA > RA do novo
-        for (int indice = quantosEstudantes; indice > onde; indice--)
-            mantEstud[indice] = mantEstud[indice-1];
-        mantEstud[onde] = novo;
-        quantosEstudantes++;  // temos mais um estudante no vetor
     }
 
     public static void listarEstudantes() {
         out.println("\n\nListagem de Estudantes\n");
-        int contLinha = 0;  // contador de linhas
-        for (int ind = 0; ind < quantosEstudantes; ind++) {
-            out.println(mantEstud[ind]);
 
-            if (++contLinha >= 20) {       // se exibiu 20 linhas, espera Enter
+        //int contLinha = 0;  // contador de linhas
+
+        for (int ind = 0; ind < objeto.qtosDados; ind++) {
+            out.println(objeto.valorDe(ind));
+
+
+            /*if (++contLinha >= 20) {       // se exibiu 20 linhas, espera Enter
                 out.print("\n\nTecle [Enter] para prosseguir: ");
                 leitor.nextLine();
                 contLinha = 0;      // reinicia o contador de linhas
-            }
+            }*/
         }
+
         out.print("\n\nTecle [Enter] para prosseguir: ");
         leitor.nextLine();
     }
 
     public static void excluirEstudante() throws Exception {
         if (ordemAtual != Ordens.porRa)
-            ordenarPorRa();
+            objeto.ordenar();
         out.println("Excluir Estudante\n");
         out.print("RA    : ");
         String ra = leitor.nextLine();
+
         Estudante umEstudante = new Estudante(" ", ra, " ");
-        if (!existeEstudante(umEstudante))  // ajusta a variável onde
-            JOptionPane.showMessageDialog(null,"Estudante não encontrado!");
-        else  // achou o estudante procurado, no índice "onde" do vetor
-        {
-            //excluir(onde);  // última posição usada
-            quantosEstudantes--;
-            for (int indice=onde; indice < quantosEstudantes; indice++)
-                mantEstud[indice] = mantEstud[indice+1];
+
+        if (!objeto.existe(umEstudante)) {  // ajusta a variável onde
+            JOptionPane.showMessageDialog(null, "Estudante não encontrado!");
+        }
+        else { // achou o estudante procurado, no índice "onde" do vetor
+            objeto.excluir(objeto.getPosicaoAtual());
+            out.println("Excluído com sucesso!");
         }
     }
 
@@ -262,16 +219,17 @@ public class Manutencao {
 
     public static void listarSituacoes() {
         out.println("\n\nSituação estudantil\n");
-        String situacao = "";
-        estudanteDestaque = Double.MIN_NORMAL;
+        String situacao;
+        //double estudanteDestaque = Double.MAX_VALUE;
 
-        double[] aprovacoes = new double[NUM_DISCIPLINAS];
-        double[] retencoes = new double[NUM_DISCIPLINAS];
+        double[] aprovacoes = new double[materias.length];
+        double[] retencoes = new double[materias.length];
 
-        for (int indice = 0; indice < quantosEstudantes; indice++) {
-            //creio que vai ter que colocar um ngc de indice para verificar
-            //em qual materia está e verificar dps com if e else as materias
-            //com mais retenção e aprovação
+
+        //for (int indice = 0; indice < quantosEstudantes; indice++) {
+        //creio que vai ter que colocar um ngc de indice para verificar
+        //em qual materia está e verificar dps com if e else as materias
+        //com mais retenção e aprovação
             /*
             pelo que eu pensei:
                 dá para um substring para ver as notas, pois elas vão estar todas em
@@ -282,51 +240,51 @@ public class Manutencao {
              */
 
 
-            for (int indice = 0; indice < quantosEstudantes; indice++) {
-                double[] notasDesseEstudante = mantEstud[indice].getNotas(); // Obter notas do estudante atual
-                situacao = "";
+        for (int indice = 0; indice < objeto.qtosDados; indice++) {
+            double[] notasDesseEstudante = objeto.dados[indice].getNotas(); // Obter notas do estudante atual
 
-                // verifica cada matéria??
-                for (int i = 0; i < notasDesseEstudante.length; i++) {
-                    if (notasDesseEstudante[i] >= 5) {
-                        aprovacoes[i]++;
-                    } else {
-                        retencoes[i]++;
-                    }
+            // verifica cada matéria??
+            for (int i = 0; i < notasDesseEstudante.length; i++) {
+                if (notasDesseEstudante[i] >= 5) {
+                    aprovacoes[i]++;
+                } else {
+                    retencoes[i]++;
                 }
-
-                double mediaDesseEstudante = estud[indice].mediaDasNotas();
-                if (mediaDesseEstudante < 5)
-                    situacao = "Não promovido(a)";
-                else {
-                    situacao = "Promovido(a)    ";
-                    if (mediaDesseEstudante > estudanteDestaque) {
-                        estudanteDestaque = mediaDesseEstudante;
-                    }
-                }
-                out.printf(
-                        "%4.1f %16s " + estud[indice] + "\n", mediaDesseEstudante,
-                        situacao);
             }
-            out.print("\n\nTecle [Enter] para prosseguir: ");
-            leitor.nextLine();
+
+            double mediaDesseEstudante = objeto.dados[indice].mediaDasNotas();
+
+            if (mediaDesseEstudante < 5)
+                situacao = "Não promovido(a)";
+            else {
+                situacao = "Promovido(a)    ";
+//                if (mediaDesseEstudante > estudanteDestaque) {
+//                    estudanteDestaque = mediaDesseEstudante;
+//                }
+            }
+
+            out.printf("%4.1f %16s " + objeto.dados[indice] + "\n", mediaDesseEstudante, situacao);
         }
+        out.print("\n\nTecle [Enter] para prosseguir: ");
+        leitor.nextLine();
     }
+    //}
 
     private static void digitarNotas() {
         out.println("Digitação de notas de estudante:\n");
         out.print("Digite o RA do(a) estudante desejado(a): ");
         String raEstudante = leitor.nextLine();
+
         try {
             Estudante estProc = new Estudante("00", raEstudante, "A");
-            if (!existeEstudante(estProc))
+            if (!objeto.existe(estProc))
                 out.println("Não há um(a) estudante com esse RA!");
             else {  // se RA foi encontrado, variável onde contém seu índice
                 out.print("Quantidade de notas a serem digitadas: ");
                 int quant = leitor.nextInt(); // depois de ler int, ler nextline()
                 leitor.nextLine(); // necessário após nextInt() para poder ler strings a seguir
 
-                mantEstud[onde].setQuantasNotas(quant);
+                objeto.dados[objeto.getPosicaoAtual()].setQuantasNotas(quant);
                 double nota;
                 for (int indNota = 0; indNota < quant; indNota++) {
                     do {
@@ -336,7 +294,7 @@ public class Manutencao {
                             break;  // sai do do-while
                         out.println("Nota inválida. Digite novamente:");
                     } while (true);
-                    mantEstud[onde].setNota(nota, indNota);
+                    objeto.dados[objeto.getPosicaoAtual()].setNota(nota, indNota);
                 }
             }
         }
@@ -347,45 +305,53 @@ public class Manutencao {
     }
 
     private static void ordenarPorCurso() {
-        for (int lento=0; lento < quantosEstudantes; lento++)
-            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (mantEstud[lento].getCurso().compareTo(mantEstud[rapido].getCurso()) > 0)
-                    trocar(lento, rapido);
+        ManterEstudantes objeto = new ManterEstudantes();
+
+        for (int lento=0; lento < objeto.qtosDados; lento++)
+            for (int rapido = lento+1; rapido < objeto.qtosDados; rapido++)
+                if (objeto.dados[lento].getCurso().compareTo(objeto.dados[rapido].getCurso()) > 0)
+                    objeto.trocar(lento, rapido);
         ordemAtual = Ordens.porCurso;
     }
 
-    private static void ordenarPorRa() {
+    //passa p outro arq
+    /*private static void ordenarPorRa() {
+        ManterEstudantes objeto = new ManterEstudantes();
+
         for (int lento=0; lento < quantosEstudantes; lento++)
             for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
                 if (mantEstud[lento].getRa().compareTo(mantEstud[rapido].getRa()) > 0)
-                    trocar(lento, rapido);
+                    objeto.trocar(lento, rapido);
         ordemAtual = Ordens.porRa;
     }
-
+*/
     private static void ordenarPorNome() {
+        ManterEstudantes objeto = new ManterEstudantes();
         //nao entendi pq tem o metodo ordenar em manter estudantes se nao e utilizado aq
-        for (int lento=0; lento < quantosEstudantes; lento++)
-            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (mantEstud[lento].getNome().compareTo(mantEstud[rapido].getNome()) > 0)
-                    trocar(lento, rapido);
+        for (int lento = 0; lento < objeto.qtosDados; lento++)
+            for (int rapido=lento+1; rapido < objeto.qtosDados; rapido++)
+                if (objeto.dados[lento].getNome().compareTo(objeto.dados[rapido].getNome()) > 0)
+                    objeto.trocar(lento, rapido);
         ordemAtual = Ordens.porNome;
     }
 
     private static void ordenarPorMedia() {
-        for (int lento=0; lento < quantosEstudantes; lento++) {
-            double mediaAtual = mantEstud[lento].mediaDasNotas();
-            for (int rapido=lento+1; rapido < quantosEstudantes; rapido++)
-                if (mediaAtual > mantEstud[rapido].mediaDasNotas())
-                    trocar(lento, rapido);
+        ManterEstudantes objeto = new ManterEstudantes();
+
+        for (int lento=0; lento < objeto.qtosDados; lento++) {
+            double mediaAtual = objeto.dados[lento].mediaDasNotas();
+            for (int rapido=lento+1; rapido < objeto.qtosDados; rapido++)
+                if (mediaAtual > objeto.dados[rapido].mediaDasNotas())
+                    objeto.trocar(lento, rapido);
             ordemAtual = Ordens.porMedia;
         }
     }
 
-    public static void disciplinaMaiorAprovacao(){
+    public static void disciplinaMaiorAprovacao() {
         int[] aprovadosPorDisciplina = new int[materias.length];
 
-        for (int i = 0; i < quantosEstudantes; i++) {
-            Estudante estudante = mantEstud[i];
+        for (int i = 0; i < objeto.qtosDados; i++) {
+            Estudante estudante = objeto.dados[i];
             for (int j = 0; j < estudante.getNotas().length; j++) {
                 if (estudante.getNotas()[j] >= 5) {
                     aprovadosPorDisciplina[j]++;
@@ -400,18 +366,18 @@ public class Manutencao {
         for (int i = 0; i < aprovadosPorDisciplina.length; i++) {
             if (aprovadosPorDisciplina[i] > maxAprovados) {
                 maxAprovados = aprovadosPorDisciplina[i];
-                disciplinaMaiorAprovacao = materias[i].getNome();
+                disciplinaMaiorAprovacao = materias[i];
             }
         }
 
         out.println("Disciplina com maior número de estudantes aprovados: " + disciplinaMaiorAprovacao);
     }
 
-    public static void disciplinaMaiorRetencao(){
+    public static void disciplinaMaiorRetencao() {
         int[] retidosPorDisciplina = new int[materias.length];
 
-        for (int i = 0; i < quantosEstudantes; i++) {
-            Estudante estudante = mantEstud[i];
+        for (int i = 0; i < objeto.qtosDados; i++) {
+            Estudante estudante = objeto.dados[i];
             for (int j = 0; j < estudante.getNotas().length; j++) {
                 if (estudante.getNotas()[j] < 5) {
                     retidosPorDisciplina[j]++;
@@ -426,7 +392,7 @@ public class Manutencao {
         for (int i = 0; i < retidosPorDisciplina.length; i++) {
             if (retidosPorDisciplina[i] > maxRetidos) {
                 maxRetidos = retidosPorDisciplina[i];
-                disciplinaMaiorRetidos = materias[i].getNome();
+                disciplinaMaiorRetidos = materias[i];
             }
         }
 
@@ -436,16 +402,16 @@ public class Manutencao {
     public static void estudanteMaiorMediaNotas() {
         double possivelMedia = 0;
 
-        for (int i = 0; i < quantosEstudantes; i++) {
-            double mediaAgora = estud[i].mediaDasNotas();
+        for (int i = 0; i < objeto.qtosDados; i++) {
+            double mediaAgora = objeto.dados[i].mediaDasNotas();
 
             if (mediaAgora > possivelMedia) {
                 possivelMedia = mediaAgora;
-                estudanteDestaque = estud[i];
+                indiceEstudanteDestaque = i;
             }
         }
 
-        out.println("O estudante com maior média de notas é: " + estudanteDestaque);
+        out.println("O estudante com maior média de notas é: " + objeto.dados[indiceEstudanteDestaque].getNome());
     }
 
     public static void maiorEMenorNotaEstudanteDestaque() {
@@ -459,18 +425,23 @@ public class Manutencao {
 
         double maiorNota = Double.MIN_VALUE;
         double menorNota = Double.MAX_VALUE;
-        String materiaMaiorNota;
-        String materiaMenorNota;
+        String materiaMaiorNota = "";
+        String materiaMenorNota = "";
 
-        for (int i = 0; i < estudanteDestaque.getNotas().length; i++) {
-            double nota = estudanteDestaque.getNota()[i];
-            if (nota > maiorNota) {
+        double[] notas = objeto.dados[indiceEstudanteDestaque].getNotas();
+
+        for (int i = 0; i < notas.length; i++) {
+            double nota = notas[i];
+            String materiaAtual = materias[i];
+
+            if (nota >= maiorNota) {
                 maiorNota = nota;
-                materiaMaiorNota = i.getNome();
+                materiaMaiorNota = materiaAtual;
             }
-            if (nota < menorNota) {
+
+            if (nota <= menorNota) {
                 menorNota = nota;
-                materiaMenorNota = i.getNome();
+                materiaMenorNota = materiaAtual;
             }
         }
 
@@ -479,21 +450,21 @@ public class Manutencao {
     }
 
     public static void mediaAritmeticaAlunoEmDis() {
-        Double somaDis;
+        double somaDis = 0.0;
 
         for (int qMat = 0; qMat < materias.length; qMat++) {
             String materia = String.valueOf(materias[qMat]);
 
-            for (int estudante = 0; estudante < quantosEstudantes; estudante++) {
-                somaDis = estudante.getNotas()[materias[qMat]];
+            for (int estudante = 0; estudante < objeto.qtosDados; estudante++) {
+                somaDis = objeto.dados[estudante].getNotas()[qMat];
             }
 
-            Double media = somaDis / quantosEstudantes;
+            double media = somaDis / objeto.qtosDados;
             out.println("A media da materia " + materia + " é: " + media);
         }
     }
 
-    public static void maiorNotaMenorMedia(){
+    public static void maiorNotaMenorMedia() {
         double menorMedia = 0;
         int materiaMenorMedia = 0;
         double[] maioresNotas = new double[materias.length];
@@ -502,8 +473,8 @@ public class Manutencao {
             double somaDis = 0;
             maioresNotas[qMat] = 0;
 
-            for (int estudante = 0; estudante < quantosEstudantes; estudante++) {
-                double notaAtual = estudante.getNotas()[materias[qMat]];
+            for (int estudante = 0; estudante < objeto.qtosDados; estudante++) {
+                double notaAtual = objeto.dados[estudante].getNotas()[qMat];
                 somaDis += notaAtual;
 
                 if (notaAtual > maioresNotas[qMat]) {
@@ -511,14 +482,14 @@ public class Manutencao {
                 }
             }
 
-            double media = somaDis / quantosEstudantes;
+            double media = somaDis / objeto.qtosDados;
 
             if (media < menorMedia) {
                 materiaMenorMedia = qMat;
             }
         }
 
-        out.println("A maior nota da materia de menor media, que é " + String.valueOf(materias[materiaMenorMedia]) + ", é: " + maioresNotas[materiaMenorMedia]);
+        out.println("A maior nota da materia de menor media, que é " + materias[materiaMenorMedia] + ", é: " + maioresNotas[materiaMenorMedia]);
     }
 
     public static void menorNotaMaiorMedia(){
@@ -530,8 +501,8 @@ public class Manutencao {
             double somaDis = 0;
             menoresNotas[qMat] = 0;
 
-            for (int estudante = 0; estudante < quantosEstudantes; estudante++) {
-                double notaAtual = estudante.getNotas()[materias[qMat]];
+            for (int estudante = 0; estudante < objeto.qtosDados; estudante++) {
+                double notaAtual = objeto.dados[estudante].getNotas()[qMat];
                 somaDis += notaAtual;
 
                 if (notaAtual < menoresNotas[qMat]) {
@@ -539,14 +510,14 @@ public class Manutencao {
                 }
             }
 
-            double media = somaDis / quantosEstudantes;
+            double media = somaDis / objeto.qtosDados;
 
             if (media > maiorMedia) {
                 materiaMaiorMedia = qMat;
             }
         }
 
-        out.println("A menor nota da materia de maior media, que é " + String.valueOf(materias[materiaMaiorMedia]) + ", é: " + menoresNotas[materiaMaiorMedia]);
+        out.println("A menor nota da materia de maior media, que é " + materias[materiaMaiorMedia] + ", é: " + menoresNotas[materiaMaiorMedia]);
     }
 
 }
