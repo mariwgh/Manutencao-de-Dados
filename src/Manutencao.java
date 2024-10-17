@@ -10,7 +10,6 @@ public class Manutencao {
 
     private static int indiceEstudanteDestaque;
 
-
     private static String[] materias;
 
     static Scanner leitor = new Scanner(in);
@@ -266,55 +265,41 @@ public class Manutencao {
     public static void estatisticas() {
 
         //disciplinaMaiorAprovacao e Retencao
+        //descobrir a quantidade de aprovados d disciplina com mais aprovacao e o nome da materia
+        //descobrir a quantidade de aprovados d disciplina com mais retencao e o nome da materia
+
+        int maxRetidos = 0;
+        String disciplinaMaiorRetidos = "";
+
+        int maxAprovados = 0;
+        String disciplinaMaiorAprovacao = "";
 
         int[] aprovadosPorDisciplina = new int[materias.length];
         int[] retidosPorDisciplina = new int[materias.length];
+
+        double possivelMedia = 0;
 
         for (int i = 0; i < objeto.qtosDados; i++) {
             Estudante estudante = objeto.dados[i];
             for (int j = 0; j < estudante.getNotas().length; j++) {
                 if (estudante.getNotas()[j] >= 5) {
                     aprovadosPorDisciplina[j]++;
+                    if (aprovadosPorDisciplina[j] > maxAprovados) {
+                        maxAprovados = aprovadosPorDisciplina[j];
+                        disciplinaMaiorAprovacao = materias[j];
+                    }
                 }
                 if (estudante.getNotas()[j] < 5) {
                     retidosPorDisciplina[j]++;
+                    if (retidosPorDisciplina[j] > maxRetidos) {
+                        maxRetidos = retidosPorDisciplina[j];
+                        disciplinaMaiorRetidos = materias[j];
+                    }
                 }
             }
-        }
 
-        //descobrir a quantidade de aprovados d disciplina com mais aprovacao e o nome da materia
-        int maxAprovados = 0;
-        String disciplinaMaiorAprovacao = "";
+            //estudanteMaiorMediaNotas
 
-        for (int i = 0; i < aprovadosPorDisciplina.length; i++) {
-            if (aprovadosPorDisciplina[i] > maxAprovados) {
-                maxAprovados = aprovadosPorDisciplina[i];
-                disciplinaMaiorAprovacao = materias[i];
-            }
-        }
-
-        out.println("Disciplina com maior número de estudantes aprovados: " + disciplinaMaiorAprovacao);
-
-
-        //descobrir a quantidade de aprovados d disciplina com mais retencao e o nome da materia
-        int maxRetidos = 0;
-        String disciplinaMaiorRetidos = "";
-
-        for (int i = 0; i < retidosPorDisciplina.length; i++) {
-            if (retidosPorDisciplina[i] > maxRetidos) {
-                maxRetidos = retidosPorDisciplina[i];
-                disciplinaMaiorRetidos = materias[i];
-            }
-        }
-
-        out.println("Disciplina com maior número de estudantes retidos: " + disciplinaMaiorRetidos);
-
-
-        //estudanteMaiorMediaNotas
-
-        double possivelMedia = 0;
-
-        for (int i = 0; i < objeto.qtosDados; i++) {
             double mediaAgora = objeto.dados[i].mediaDasNotas();
 
             if (mediaAgora > possivelMedia) {
@@ -323,7 +308,37 @@ public class Manutencao {
             }
         }
 
+        out.println("Disciplina com maior número de estudantes aprovados: " + disciplinaMaiorAprovacao);
+        out.println("Disciplina com maior número de estudantes retidos: " + disciplinaMaiorRetidos);
         out.println("O estudante com maior média de notas é: " + objeto.dados[indiceEstudanteDestaque].getNome());
+
+        //descobrir a quantidade de aprovados d disciplina com mais aprovacao e o nome da materia
+            /*        int maxAprovados = 0;
+        String disciplinaMaiorAprovacao = "";
+
+        for (int i = 0; i < aprovadosPorDisciplina.length; i++) {
+            if (aprovadosPorDisciplina[i] > maxAprovados) {
+                maxAprovados = aprovadosPorDisciplina[i];
+                disciplinaMaiorAprovacao = materias[i];
+            }
+        }     for (int i = 0; i < retidosPorDisciplina.length; i++) {
+            if (retidosPorDisciplina[i] > maxRetidos) {
+                maxRetidos = retidosPorDisciplina[i];
+                disciplinaMaiorRetidos = materias[i];
+            }
+        }*/
+
+        //estudanteMaiorMediaNotas
+
+       /* for (int i = 0; i < objeto.qtosDados; i++) {
+            double mediaAgora = objeto.dados[i].mediaDasNotas();
+
+            if (mediaAgora > possivelMedia) {
+                possivelMedia = mediaAgora;
+                indiceEstudanteDestaque = i;
+            }
+        }*/
+
 
         //materia com maior e a com  menor nota do estudante destaque
 
@@ -369,27 +384,30 @@ public class Manutencao {
             String materia = String.valueOf(materias[qMat]);
 
             for (int estudante = 0; estudante < objeto.qtosDados; estudante++) {
-                somaDis = objeto.dados[estudante].getNotas()[qMat];
+                //somaDis = objeto.dados[estudante].getNotas()[qMat];
                 double notaAtual = objeto.dados[estudante].getNotas()[qMat];
-                somaDis += notaAtual;
 
-                if (notaAtual > maioresNotas[qMat]) {
-                    maioresNotas[qMat] = notaAtual;
+                while (notaAtual != null) {
+                    somaDis += notaAtual;
+
+                    if (notaAtual > maioresNotas[qMat]) {
+                        maioresNotas[qMat] = notaAtual;
+                    }
+
+                    double media = somaDis / objeto.qtosDados;
+
+                    if (media < menorMedia) {
+                        materiaMenorMedia = qMat;
+                    }
+
+                    maioresNotas[qMat] = 0;
+
+                    if (notaAtual < menoresNotas[qMat]) {
+                        menoresNotas[qMat] = notaAtual;
+                    }
+
+                    out.println("A media da materia " + materia + " é: " + media);
                 }
-
-                double media = somaDis / objeto.qtosDados;
-
-                if (media < menorMedia) {
-                    materiaMenorMedia = qMat;
-                }
-
-                maioresNotas[qMat] = 0;
-
-                if (notaAtual < menoresNotas[qMat]) {
-                    menoresNotas[qMat] = notaAtual;
-                }
-
-                out.println("A media da materia " + materia + " é: " + media);
             }
 
         }
