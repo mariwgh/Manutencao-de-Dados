@@ -220,33 +220,43 @@ public class Manutencao {
     }
 
     private static void ordenarPorCurso() {
-        ManterEstudantes objeto = new ManterEstudantes();
+        System.out.println(objeto.qtosDados);
+        Estudante aux = null;
+        //o quantos dados está como zero
+        for (int lento=0; lento <= objeto.qtosDados-1; lento++){
+            for (int rapido = lento+1; rapido <= objeto.qtosDados-1; rapido++){
+                double cursoLento = Double.parseDouble(objeto.dados[lento].getCurso());
+                double cursoRapido = Double.parseDouble(objeto.dados[rapido].getCurso());
+                if (cursoRapido < cursoLento) {
+                    objeto.trocar(rapido, lento);
+                }
+            }
+        }
 
-        for (int lento=0; lento < objeto.qtosDados; lento++)
-            for (int rapido = lento+1; rapido < objeto.qtosDados; rapido++)
-                if (objeto.dados[lento].getCurso().compareTo(objeto.dados[rapido].getCurso()) > 0)
-                    objeto.trocar(lento, rapido);
         ordemAtual = Ordens.porCurso;
     }
 
     private static void ordenarPorNome() {
-        ManterEstudantes objeto = new ManterEstudantes();
-
-        for (int lento = 0; lento < objeto.qtosDados; lento++)
-            for (int rapido=lento+1; rapido < objeto.qtosDados; rapido++)
-                if (objeto.dados[lento].getNome().compareTo(objeto.dados[rapido].getNome()) > 0)
+        for (int lento = 0; lento < objeto.qtosDados; lento++){
+            for (int rapido=lento+1; rapido < objeto.qtosDados; rapido++){
+                String nomeLento = objeto.dados[lento].getNome();
+                String nomeRapido = objeto.dados[rapido].getNome();
+                if (nomeLento.compareTo(nomeRapido) > 0)
                     objeto.trocar(lento, rapido);
+            }
+        }
         ordemAtual = Ordens.porNome;
     }
 
     private static void ordenarPorMedia() {
-        ManterEstudantes objeto = new ManterEstudantes();
+        for (int lento=0; lento <= objeto.qtosDados-1; lento++) {
+            for (int rapido=lento+1; rapido <= objeto.qtosDados-1; rapido++){
+                double mediaLenta = objeto.dados[lento].mediaDasNotas();
+                double mediaRapida = objeto.dados[rapido].mediaDasNotas();
+                if (mediaLenta < mediaRapida)
+                    objeto.trocar(rapido, lento);
+            }
 
-        for (int lento=0; lento < objeto.qtosDados; lento++) {
-            double mediaAtual = objeto.dados[lento].mediaDasNotas();
-            for (int rapido=lento+1; rapido < objeto.qtosDados; rapido++)
-                if (mediaAtual > objeto.dados[rapido].mediaDasNotas())
-                    objeto.trocar(lento, rapido);
             ordemAtual = Ordens.porMedia;
         }
     }
@@ -338,7 +348,7 @@ public class Manutencao {
         String materiaMenorNota = "";
 
         double[] notas = objeto.dados[indiceEstudanteDestaque].getNotas();
-
+/*
         for (int i = 0; i < notas.length; i++) {
             double nota = notas[i];
             String materiaAtual = materias[i];
@@ -353,7 +363,7 @@ public class Manutencao {
                 materiaMenorNota = materiaAtual;
             }
         }
-
+*/
         out.println("A matéria que o estudante destaque tem a maior nota é: " + materiaMaiorNota);
         out.println("A matéria que o estudante destaque tem a menor nota é: " + materiaMenorNota);
 
