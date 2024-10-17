@@ -67,8 +67,7 @@ public class Manutencao {
                 case 9 : lerMaterias();estatisticas(); break;
                 default: out.println("Opção inválida!");
             }
-        }
-        while (opcao != 0);
+        } while (opcao != 0);
     }
 
     // compareTo()   == 0 primeiro dado igual outro dado
