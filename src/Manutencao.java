@@ -354,6 +354,9 @@ public class Manutencao {
         double[] maioresNotas = new double[materias.length];
         double[] menoresNotas = new double[materias.length];
 
+        String alunoMaiorNota = "";
+        String alunoMenorNota = "";
+
         for (int qMat = 0; qMat < materias.length; qMat++) {
             String materia = materias[qMat];
             somaDis = 0.0;  //reseta a soma para cada disciplina
@@ -364,10 +367,12 @@ public class Manutencao {
 
                 if (notaAtual > maioresNotas[qMat]) {
                     maioresNotas[qMat] = notaAtual;
+                    alunoMaiorNota = objeto.dados[estudante].getNome();
                 }
 
                 if (notaAtual < menoresNotas[qMat]) {
                     menoresNotas[qMat] = notaAtual;
+                    alunoMenorNota = objeto.dados[estudante].getNome();
                 }
             }
 
@@ -386,8 +391,8 @@ public class Manutencao {
             out.println("A media de " + materia + " é: " + media);
         }
 
-        out.println("\nA maior nota da materia de menor media, que é " + materias[indMateriaMenorMedia] + ", é: " + maioresNotas[indMateriaMenorMedia]);
-        out.println("A menor nota da materia de maior media, que é " + materias[indMateriaMaiorMedia] + ", é: " + menoresNotas[indMateriaMaiorMedia]);
+        out.println("\nO aluno com a maior nota da materia de menor media, que é " + materias[indMateriaMenorMedia] + ", é: " + alunoMaiorNota);
+        out.println("O aluno com a menor nota da materia de maior media, que é " + materias[indMateriaMaiorMedia] + ", é: " + alunoMenorNota);
 
         out.print("\n\nTecle [Enter] para prosseguir: ");
         leitor.nextLine();
