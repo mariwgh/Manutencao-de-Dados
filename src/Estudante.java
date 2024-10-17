@@ -21,11 +21,11 @@ public class Estudante {
     }
 
     public boolean leuLinhaDoArquivo(BufferedReader arq) throws Exception {
-        if (arq != null)    // arquivo de entrada está aberto
-        {
+        if (arq != null)   { // arquivo de entrada está aberto
+
             String linhaDoArquivo = arq.readLine();
-            if (linhaDoArquivo != null)  // conseguiu ler linha do arquivo
-            {
+
+            if (linhaDoArquivo != null) { // conseguiu ler linha do arquivo
                 String c = linhaDoArquivo.substring( 0,  2);
                 String r = linhaDoArquivo.substring( 2,  7);
                 String n = linhaDoArquivo.substring( 7, 37);
@@ -43,8 +43,7 @@ public class Estudante {
                 // separamos da linha do arquivo, tantas notas quanto o valor de
                 // qn e cada nota é atribuida a uma posição do vetor interno notas
                 int inicioNota = 39;  // início da primeira nota
-                for (int indNota = 0; indNota < qn; indNota++)
-                {
+                for (int indNota = 0; indNota < qn; indNota++) {
                     String umaNota =  linhaDoArquivo.substring(inicioNota, inicioNota+4);
                     notas[indNota] = Double.parseDouble(umaNota);
                     inicioNota += 4;  // posicionar no inicio da próxima nota

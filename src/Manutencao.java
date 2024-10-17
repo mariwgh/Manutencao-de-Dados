@@ -345,12 +345,12 @@ public class Manutencao {
 
             if (nota >= maiorNota) {
                 maiorNota = nota;
-                materiaMaiorNota = i.getNome();
+                materiaMaiorNota = materiaAtual;
             }
 
             if (nota <= menorNota) {
                 menorNota = nota;
-                materiaMenorNota = i.getNome();
+                materiaMenorNota = materiaAtual;
             }
         }
 
@@ -374,32 +374,29 @@ public class Manutencao {
             String materia = String.valueOf(materias[qMat]);
 
             for (int estudante = 0; estudante < objeto.qtosDados; estudante++) {
-                //somaDis = objeto.dados[estudante].getNotas()[qMat];
+
                 double notaAtual = objeto.dados[estudante].getNotas()[qMat];
 
-                while (notaAtual != null) {
-                    somaDis += notaAtual;
+                somaDis += notaAtual;
 
-                    if (notaAtual > maioresNotas[qMat]) {
-                        maioresNotas[qMat] = notaAtual;
-                    }
-
-                    double media = somaDis / objeto.qtosDados;
-
-                    if (media < menorMedia) {
-                        materiaMenorMedia = qMat;
-                    }
-
-                    maioresNotas[qMat] = 0;
-
-                    if (notaAtual < menoresNotas[qMat]) {
-                        menoresNotas[qMat] = notaAtual;
-                    }
-
-                    out.println("A media da materia " + materia + " é: " + media);
+                if (notaAtual > maioresNotas[qMat]) {
+                    maioresNotas[qMat] = notaAtual;
                 }
-            }
 
+                double media = somaDis / objeto.qtosDados;
+
+                if (media < menorMedia) {
+                    materiaMenorMedia = qMat;
+                }
+
+                maioresNotas[qMat] = 0;
+
+                if (notaAtual < menoresNotas[qMat]) {
+                    menoresNotas[qMat] = notaAtual;
+                }
+
+                out.println("A media da materia " + materia + " é: " + media);
+            }
         }
 
         out.println("A maior nota da materia de menor media, que é " + materias[materiaMenorMedia] + ", é: " + maioresNotas[materiaMenorMedia]);
