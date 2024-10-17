@@ -9,10 +9,6 @@ public class ManterEstudantes implements ManterDados {
     Situacao situacao;
 
 
-    /*public ManterEstudantes(Estudante estudante) throws Exception {
-        super(estudante.getCurso(), estudante.getRa(), estudante.getNome());
-    }*/
-
     private void expandirVetor() {
         Estudante[] novoVetor = new Estudante[dados.length * 2];
 
@@ -23,7 +19,7 @@ public class ManterEstudantes implements ManterDados {
         dados = novoVetor;
     }
 
-    public void ManterEstudantes(int tamanhoFisico) {
+    public void inicializador(int tamanhoFisico) {
         tamanhoFis = tamanhoFisico;
         dados = new Estudante[tamanhoFisico];
     }
@@ -64,7 +60,7 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void gravarDados(String nomeArquivo) throws IOException {
-//        qtosDados = 3;
+        // qtosDados = 3;
         BufferedWriter arquivoDeSaida = new BufferedWriter(new FileWriter(nomeArquivo));
         for (int indice=0; indice < qtosDados; indice++){
             arquivoDeSaida.write(dados[indice].formatoDeArquivo());
@@ -80,20 +76,6 @@ public class ManterEstudantes implements ManterDados {
             }
         }
         return false;
-    }
-
-    public void lerMaterias() throws IOException {
-        materias = new String[15];
-        BufferedReader leitor = new BufferedReader(new FileReader("Materias.txt"));
-        String linha = "";
-        int indice = 0;
-        while (linha != null){
-            linha = leitor.readLine();
-            if (linha != null){
-                materias[indice] = linha;
-                indice++;
-            }
-        }
     }
 
     public void incluirNoFinal(Estudante novoDado) {
