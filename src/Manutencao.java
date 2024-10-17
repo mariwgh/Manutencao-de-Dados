@@ -345,12 +345,12 @@ public class Manutencao {
 
             if (nota >= maiorNota) {
                 maiorNota = nota;
-                materiaMaiorNota = materiaAtual;
+                materiaMaiorNota = i.getNome();
             }
 
             if (nota <= menorNota) {
                 menorNota = nota;
-                materiaMenorNota = materiaAtual;
+                materiaMenorNota = i.getNome();
             }
         }
 
