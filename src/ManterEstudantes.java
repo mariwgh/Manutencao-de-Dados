@@ -64,6 +64,7 @@ public class ManterEstudantes implements ManterDados {
     }
 
     public void gravarDados(String nomeArquivo) throws IOException {
+//        qtosDados = 3;
         BufferedWriter arquivoDeSaida = new BufferedWriter(new FileWriter(nomeArquivo));
         for (int indice=0; indice < qtosDados; indice++){
             arquivoDeSaida.write(dados[indice].formatoDeArquivo());
